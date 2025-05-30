@@ -98,6 +98,9 @@ namespace UnityEngine.U2D
         float m_BoundsScale = 2.0f;
 
         [SerializeField]
+        private bool m_bakeOnDemand = false;
+
+        [SerializeField]
         SpriteShapeGeometryCreator m_Creator;
         [SerializeField]
         List<SpriteShapeGeometryModifier> m_Modifiers = new List<SpriteShapeGeometryModifier>();
@@ -383,6 +386,12 @@ namespace UnityEngine.U2D
             get => m_WaitForBake;
             set => m_WaitForBake = value;
         }
+        
+        public bool BakeOnDemand
+        {
+            get => m_bakeOnDemand;
+            set => m_bakeOnDemand = value;
+        }
 #endregion
 
 #region EventHandles.
@@ -628,6 +637,8 @@ namespace UnityEngine.U2D
 
         void OnWillRenderObject()
         {
+            if (m_bakeOnDemand) return;
+            
             var jh = BakeMesh();
             if (m_WaitForBake)
                 jh.Complete();
